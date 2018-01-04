@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+    <title>Визуализатор СУБДР</title>
+</h:head>
+<h:body>
+    <h:outputStylesheet library="css" name="index.css"/>
+    <h:outputScript library="js" name="drawGraph.js"/>
+
+    <div>
+        <div>
+            <h:form id="form" prependId="false">
+                <h:inputText id="func" required="true"
+                             value="#{Controller.st_func}">
+                    <f:converter converterId="FuncConverter"/>
+                </h:inputText>
+                <h:commandButton id="submit" action="index.xhtml" type="submit" value="Обработать">
+                    <f:actionListener binding="#{Controller.makeTable()}"/>
+                    <f:actionListener binding="#{Controller.startMakingTree()}"/>
+                    <f:actionListener binding="#{Controller.makeOrderedTree()}"/>
+                </h:commandButton>
+                <h:message for="func"/>
+                <h:inputHidden id="st_tree" value="#{Controller.st_tree}"/>
+                <h:inputHidden id="ordered_tree" value="#{Controller.ordered_tree}"/>
+                <h:inputHidden id="short_ordered_tree" value="#{Controller.short_ordered_tree}"/>
+            </h:form>
+        </div>
+        <div>
+            <table width="100%">
+                <tr>
+                    <td>
+                        <table class="result">
+                            <tr>
+                                <ui:repeat value="#{Controller.truthTable.args}" var="value">
+                                    <td class="number">
+                                        #{value}
+                                    </td>
+                                </ui:repeat>
+                            </tr>
+                            <ui:repeat value="#{Controller.truthTable.rows}" var="value">
+                                <tr>
+                                    <ui:repeat value="#{value}" var="val">
+                                        <td class="number">
+                                            #{val}
+                                        </td>
+                                    </ui:repeat>
+                                </tr>
+                            </ui:repeat>
+                        </table>
+                    </td>
+                    <td style="vertical-align: top" width="30%">
+                        <!--todo href-->
+                        <a class="knopka" target="_blank" href="https://drive.google.com/file/d/15L65L99tP2Q1Sq_mzzwyJEdVQ53mnypo/view">Инструкция</a>
+                        <a class="knopka" target="_blank" href="https://drive.google.com/file/d/1UFf84fV90JjtyKgKLMHOKSn4x2v8n30W/view">Теория</a>
+
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <ui:include src="areas.html"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h:inputText id="nodeOfOrderedTree"/>
+                    <input type="button"
+                           onclick="checkClient(document.getElementById('nodeOfOrderedTree').value, document.getElementById('orderedTree').getContext('2d'), ordered_tree)"
+                           name="check" value="Проверить"/>
+                    <input type="button" value="Нарисовать Диаграмму"
+                           onclick="drawAll(document.getElementById('orderedTree').getContext('2d'), ordered_tree)"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ui:include src="orderedTree.html"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h:inputText id="nodeOfShortOrderedTree"/>
+                    <input type="button"
+                           onclick="checkClient(document.getElementById('nodeOfShortOrderedTree').value,document.getElementById('shortOrderedTree').getContext('2d'), short_ordered_tree)"
+                           name="check" value="Проверить"/>
+                    <input type="button" value="Нарисовать Диаграмму"
+                           onclick="drawAll(document.getElementById('shortOrderedTree').getContext('2d'), short_ordered_tree)"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <ui:include src="shortOrderedTree.html"/>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</h:body>
+</html>
